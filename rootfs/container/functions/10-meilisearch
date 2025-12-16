@@ -1,0 +1,51 @@
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
+
+meilisearch_bootstrap_filesystem() {
+    create_folder \
+                "${DATA_PATH},\
+                ${CONFIG_PATH},\
+                ${CUSTOM_CONFIG_PATH}" \
+                meilisearch:meilisearch 750
+}
+
+meilisearch_create_configuration() {
+	if [ "${MEILISEARCH_SETUP_TYPE,,}" = "auto" ]; then
+        print_notice "Configuring Meilisearch"
+	fi
+}
+
+meilisearch_configure_logging() {
+    if [ "${MEILISEARCH_SETUP_TYPE,,}" = "auto" ]; then
+        print_debug "Configuring Logging"
+        case "${LOG_TYPE,,}" in
+            file )
+                create_folder \
+                                "${LOG_PATH}" \
+                                meilisearch:meilisearch 750
+                create_logrotate meilisearch "${LOG_PATH%/}"/"${LOG_FILE}" meilisearch meilisearch meilisearch
+                logfile="${LOG_PATH}/${LOG_FILE}"
+            ;;
+            * )
+                logfile="${LOG_PATH}/${LOG_FILE}"
+            ;;
+        esac
+
+    fi
+}
+
+meilisearch_configure_monitoring() {
+    if var_true "${CONTAINER_ENABLE_MONITORING}" ; then
+        source /container/base/defaults/*-monitoring
+        case "${CONTAINER_MONITORING_BACKEND,,}" in
+            "zabbix" )
+                cat <<EOF | silent tee "${ZABBIX_CONFIG_PATH%/}"/"${ZABBIX_CONFIG_FILE}.d"/nfrastack_meilisearch.conf
+# Zabbix meilisearch Configuration - Automatically Generated
+# Autoregister=meilisearch
+
+EOF
+            ;;
+        esac
+    fi
+}

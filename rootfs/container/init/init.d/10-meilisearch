@@ -1,0 +1,15 @@
+#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
+
+source /container/base/functions/container/init
+prepare_service
+SERVICE_NAME="meilisearch"
+
+meilisearch_bootstrap_filesystem
+meilisearch_configure_monitoring
+meilisearch_configure_logging
+meilisearch_create_configuration
+
+liftoff

@@ -1,0 +1,15 @@
+#!/command/with-contenv bash
+# SPDX-FileCopyrightText: © 2025 Nfrastack <code@nfrastack.com>
+#
+# SPDX-License-Identifier: MIT
+
+source /container/base/functions/container/init
+prepare_service single
+SERVICE_NAME="meilisearch"
+
+check_container_initialized
+check_service_initialized init
+liftoff
+
+print_start "Starting Meilisearch (meilisearch -V | head -n1 | awk '{print $2}')"
+exec meilisearch
