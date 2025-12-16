@@ -1,0 +1,20 @@
+services:
+
+  meilisearch-app:
+    image: docker.io/nfrastack/meilisearch
+    container_name: meilisearch-app
+    ports:
+      #- 53:53
+    volumes:
+      - ./data:/data
+      - ./logs:/logs
+    environment:
+      - TIMEZONE=America/Vancouver
+    networks:
+      - services
+    restart: always
+
+networks:
+  services:
+    external: true
+
