@@ -3,5 +3,14 @@
 # SPDX-License-Identifier: MIT
 
 output_off
-
+set_env ENABLE_METRICS="false" nfrastack/meilisearch
+set_env MAX_NUMBER_OF_BATCHED_TASKS="" nfrastack/meilisearch
+set_env REDUCE_INDEXING_MEMORY_USAGE="false" nfrastack/meilisearch
+set_env SSL_AUTH_PATH="" nfrastack/meilisearch
+set_env SSL_CERT_PATH="" nfrastack/meilisearch
+set_env SSL_KEY_PATH="" nfrastack/meilisearch
+set_env SSL_OCSP_PATH="" nfrastack/meilisearch
+set_env SSL_REQUIRE_AUTH="false" nfrastack/meilisearch
+set_env SSL_RESUMPTION="false" nfrastack/meilisearch
+set_env SSL_TICKETS="false" nfrastack/meilisearch
 output_on

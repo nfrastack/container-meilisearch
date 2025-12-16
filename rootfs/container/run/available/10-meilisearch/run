@@ -9,7 +9,14 @@ SERVICE_NAME="meilisearch"
 
 check_container_initialized
 check_service_initialized init
+
+if [ "${MEILISEARCH_SETUP_TYPE,,}" = "auto" ]; then
+    config_args="--config-file-path ${CONFIG_PATH%/}/${CONFIG_FILE}"
+fi
+
 liftoff
 
-print_start "Starting Meilisearch (meilisearch -V | head -n1 | awk '{print $2}')"
-exec meilisearch
+print_start "Starting Meilisearch $(meilisearch -V | head -n1 | awk '{print $2}')"
+set -x
+exec s6-setuidgid "${MEILISEARCH_USER}" meilisearch ${config_args} ${MEILISEARCH_ADDITIONAL_ARGS}
+set +x

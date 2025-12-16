@@ -37,6 +37,7 @@ EXPOSE \
 
 RUN echo "" && \
     MELLISEARCH_BUILD_DEPS_ALPINE=" \
+                                    #cargo \
                                   " \
                                   && \
     MELLISEARCH_RUN_DEPS_ALPINE=" \
@@ -63,8 +64,8 @@ RUN echo "" && \
     cp -R target/release/{meilisearch,meilitool} /usr/local/bin && \
     container_build_log add "meilisearch" "${MELLISEARCH_VERSION}" "${MELLISEARCH_REPO_URL}" && \
     mkdir -p \
-        /container/data/meilisearch \
-        && \
+                /container/data/meilisearch \
+                && \
     chown -R meilisearch:meilisearch /container/data/meilisearch && \
     container_build_log add "meilisearch" "${MELLISEARCH_VERSION}" "${MELLISEARCH_REPO_URL}" && \
     package remove \

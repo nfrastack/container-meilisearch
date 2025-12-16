@@ -9,7 +9,6 @@ SERVICE_NAME="meilisearch"
 
 meilisearch_bootstrap_filesystem
 meilisearch_configure_monitoring
-meilisearch_configure_logging
 meilisearch_create_configuration
 
 liftoff

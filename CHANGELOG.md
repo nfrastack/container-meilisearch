@@ -1,4 +1,4 @@
-## 0.0.1re 2025-12-15 <code at nfrastack dot com>
+## 1.0.0pre 2025-12-15 <code at nfrastack dot com>
 
    ### Added
       - Alpine 3.22

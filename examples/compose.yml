@@ -3,13 +3,24 @@ services:
   meilisearch-app:
     image: docker.io/nfrastack/meilisearch
     container_name: meilisearch-app
+    #labels:
+    #  - traefik.enable=true
+    #  - traefik.http.routers.meilisearch-app.rule=Host(`meilisearch.example.com`)
+    #  - traefik.http.services.meilisearch-app.loadbalancer.server.port=7700
     ports:
-      #- 53:53
+      - 127.0.0.1:7700:7700
     volumes:
       - ./data:/data
       - ./logs:/logs
     environment:
       - TIMEZONE=America/Vancouver
+
+      - MEILISEARCH_SETUP_TYPE=auto
+      - LISTEN_PORT=7700
+
+      - LOG_LEVEL=INFO
+
+      - MASTER_KEY=abcdefghijklmnop
     networks:
       - services
     restart: always
