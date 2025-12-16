@@ -14,9 +14,32 @@ if [ "${MEILISEARCH_SETUP_TYPE,,}" = "auto" ]; then
     config_args="--config-file-path ${CONFIG_PATH%/}/${CONFIG_FILE}"
 fi
 
+if [ "${MEILISEARCH_USER}" != "root" ] ; then
+    sudo_prefix="s6-setuidgid ${MEILISEARCH_USER}"
+fi
+
+case "${LOG_TYPE,,}" in
+    both )
+        SHOW_OUTPUT=FALSE
+    ;;
+    file )
+        SHOW_OUTPUT=FALSE
+        silent_arg="silent"
+    ;;
+    none )
+        SHOW_OUTPUT=FALSE
+        LOG_PATH=/dev
+        LOG_FILE=null
+        silent_arg="silent"
+    ;;
+    console | *)
+        SHOW_OUTPUT=TRUE
+        LOG_PATH=/dev
+        LOG_FILE=null
+    ;;
+esac
+
 liftoff
 
 print_start "Starting Meilisearch $(meilisearch -V | head -n1 | awk '{print $2}')"
-set -x
-exec s6-setuidgid "${MEILISEARCH_USER}" meilisearch ${config_args} ${MEILISEARCH_ADDITIONAL_ARGS}
-set +x
+exec ${sudo_prefix} meilisearch ${config_args} ${MEILISEARCH_ADDITIONAL_ARGS} 2>&1 | ${silent_arg} ${sudo_prefix} tee -a "${LOG_PATH%/}"/"${LOG_FILE}"

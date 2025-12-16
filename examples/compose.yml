@@ -19,7 +19,7 @@ services:
       - LISTEN_PORT=7700
 
       - LOG_LEVEL=INFO
-
+      - LOG_TYPE=BOTH
       - MASTER_KEY=abcdefghijklmnop
     networks:
       - services

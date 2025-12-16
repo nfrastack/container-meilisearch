@@ -108,10 +108,12 @@ Below is the complete list of available options that can be used to customize yo
 | `CONFIG_PATH`                 | Path to configuration directory                                        | `/config/`                |          |
 | `CONFIG_FILE`                 | Name of the config file                                                | `meilisearch.conf`        |          |
 | `DATA_PATH`                   | Path to data directory                                                 | `/data/`                  |          |
-| `DB_PATH`                     | Path to database file                                                  | `${DATA_PATH}/db/data.ms` |          |
+| `DB_PATH`                     | Path to database file                                                  | `${DATA_PATH}/db/`        |          |
 | `DUMP_PATH`                   | Path to dump directory                                                 | `${DATA_PATH}/dumps/`     |          |
 | `LOG_PATH`                    | Path to logs directory                                                 | `/logs/`                  |          |
-| `LOG_LEVEL`                   | Log level                                                              | `info`                    |          |
+| `LOG_FILE`                    | Log file name                                                          | `meilisearch.log`         |          |
+| `LOG_LEVEL`                   | Log level `OFF` `ERROR` `WARN` `INFO` `DEBUG` `TRACE`                  | `INFO`                    |          |
+| `LOG_TYPE`                    | Log to `CONSOLE` `FILE` `BOTH` or `NONE`                               | `CONSOLE`                 |          |
 | `SNAPSHOT_PATH`               | Path to snapshot directory                                             | `${DATA_PATH}/snapshots/` |          |
 | `MEILISEARCH_ADDITIONAL_ARGS` | Additional arguments to pass to meilisearch execution                  |                           |          |
 
@@ -119,31 +121,31 @@ Below is the complete list of available options that can be used to customize yo
 
 | Parameter                      | Description                                               | Default               | Advanced | _FILE |
 | ------------------------------ | --------------------------------------------------------- | --------------------- | -------- | ----- |
-| `ENVIRONMENT`                  | Environment (`production`/`development`)                  | `production`          |          |       |
-| `MASTER_KEY`                   | 16 byte Master Key used for securing API                  | ``                    |          | x     |
+| `ENVIRONMENT`                  | Environment (`production`/`development`)                  | `PRODUCTION`          |          |       |
+| `MASTER_KEY`                   | Master Key used for securing API                          | ``                    |          | x     |
 | `MEILISEARCH_USER`             | User running Meilisearch                                  | `meilisearch`         |          |       |
 | `MEILISEARCH_GROUP`            | Group running Meilisearch                                 | `meilisearch`         |          |       |
 | `LISTEN_IP`                    | IP address to listen on                                   | `0.0.0.0`             |          |       |
 | `LISTEN_PORT`                  | Port to listen on                                         | `7700`                |          |       |
-| `ENABLE_ANALYTICS`             | Enable/disable analytics                                  | `false`               |          |       |
-| `ENABLE_METRICS`               | Enable/disable metrics                                    | `false`               | x        |       |
+| `ENABLE_ANALYTICS`             | Enable/disable analytics                                  | `FALSE`               |          |       |
+| `ENABLE_METRICS`               | Enable/disable metrics                                    | `FALSE`               | x        |       |
 | `HTTP_PAYLOAD_SIZE_LIMIT`      | Max HTTP payload size                                     | `100MB`               |          |       |
-| `IGNORE_DUMP_IF_DB_EXISTS`     | Ignore dump if DB exists                                  | `false`               |          |       |
-| `IGNORE_MISSING_DUMP`          | Ignore missing dump                                       | `false`               |          |       |
-| `IGNORE_MISSING_SNAPSHOT`      | Ignore missing snapshot                                   | `false`               |          |       |
-| `IGNORE_SNAPSHOT_IF_DB_EXISTS` | Ignore snapshot if DB exists                              | `false`               |          |       |
+| `IGNORE_DUMP_IF_DB_EXISTS`     | Ignore dump if DB exists                                  | `FALSE`               |          |       |
+| `IGNORE_MISSING_DUMP`          | Ignore missing dump                                       | `FALSE`               |          |       |
+| `IGNORE_MISSING_SNAPSHOT`      | Ignore missing snapshot                                   | `FALSE`               |          |       |
+| `IGNORE_SNAPSHOT_IF_DB_EXISTS` | Ignore snapshot if DB exists                              | `FALSE`               |          |       |
 | `MAX_INDEXING_MEMORY`          | Max memory for indexing (kB, 66% of available by default) | Calculated at runtime |          |       |
 | `MAX_INDEXING_THREADS`         | Max threads for indexing                                  | `0`                   |          |       |
 | `MAX_NUMBER_OF_BATCHED_TASKS`  | Max number of batched tasks (experimental)                | ``                    | x        |       |
-| `REDUCE_INDEXING_MEMORY_USAGE` | Reduce memory usage during indexing (experimental)        | `false`               | x        |       |
-| `SCHEDULE_SNAPSHOT`            | Enable scheduled snapshots                                | `false`               |          |       |
+| `REDUCE_INDEXING_MEMORY_USAGE` | Reduce memory usage during indexing (experimental)        | `FALSE`               | x        |       |
+| `SCHEDULE_SNAPSHOT`            | Enable scheduled snapshots                                | `FALSE`               |          |       |
 | `SSL_AUTH_PATH`                | Path for SSL client authentication                        | ``                    | x        |       |
 | `SSL_CERT_PATH`                | Path to SSL certificate                                   | ``                    | x        |       |
 | `SSL_KEY_PATH`                 | Path to SSL key                                           | ``                    | x        |       |
 | `SSL_OCSP_PATH`                | Path to SSL OCSP file                                     | ``                    | x        |       |
-| `SSL_REQUIRE_AUTH`             | Require SSL authentication                                | `false`               | x        |       |
-| `SSL_RESUMPTION`               | Enable SSL session resumption                             | `false`               | x        |       |
-| `SSL_TICKETS`                  | Enable SSL tickets                                        | `false`               | x        |       |
+| `SSL_REQUIRE_AUTH`             | Require SSL authentication                                | `FALSE`               | x        |       |
+| `SSL_RESUMPTION`               | Enable SSL session resumption                             | `FALSE`               | x        |       |
+| `SSL_TICKETS`                  | Enable SSL tickets                                        | `FALSE`               | x        |       |
 
 ## Users and Groups
 

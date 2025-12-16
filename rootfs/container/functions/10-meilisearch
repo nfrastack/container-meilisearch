@@ -9,20 +9,16 @@ meilisearch_bootstrap_filesystem() {
                     ${DATA_PATH},\
                     ${DB_PATH},\
                     ${DUMP_PATH},\
-                    ${LOG_PATH},\
                     ${SNAPSHOT_PATH}" \
                     "${MEILISEARCH_USER}":"${MEILISEARCH_GROUP}" 750
 
         case "${LOG_TYPE,,}" in
-            file )
+            file |  both )
                 create_folder \
                                 "${LOG_PATH}" \
                                 "${MEILISEARCH_USER}":"${MEILISEARCH_GROUP}" 750
                 create_logrotate meilisearch "${LOG_PATH%/}"/"${LOG_FILE}" "${MEILISEARCH_USER}" "${MEILISEARCH_GROUP}" meilisearch
-                logfile="${LOG_PATH}/${LOG_FILE}"
-            ;;
-            * )
-                logfile="${LOG_PATH}/${LOG_FILE}"
+                s6-setuidgid "${MEILISEARCH_USER}" touch "${LOG_PATH%/}"/"${LOG_FILE}"
             ;;
         esac
     fi
@@ -31,7 +27,6 @@ meilisearch_bootstrap_filesystem() {
 meilisearch_create_configuration() {
 	if [ "${MEILISEARCH_SETUP_TYPE,,}" = "auto" ]; then
         set_config() {
-            # $1: key, $2: value, $3: config file, $4: quotes (quotes/false)
             local key="$1"
             local value="$2"
             local file="$3"
@@ -59,7 +54,7 @@ meilisearch_create_configuration() {
 
         local config_path="${CONFIG_PATH%/}/${CONFIG_FILE}"
         if [ ! -f "${config_path}" ]; then
-            sudo -u "${MEILISEARCH_USER}" touch "$config_path"
+            sudo -u "${MEILISEARCH_USER}" touch "${config_path}"
         fi
 
         local no_analytics_value="false"
@@ -67,36 +62,36 @@ meilisearch_create_configuration() {
             no_analytics_value="true"
         fi
 
-        set_config env "${ENVIRONMENT}" "${config_path}" quotes
-        set_config db_path "${DB_PATH}" "${config_path}" quotes
+        set_config env "${ENVIRONMENT,,}" "${config_path}" quotes
+        set_config db_path "${DB_PATH%/}" "${config_path}" quotes
         set_config http_addr "${LISTEN_IP}:${LISTEN_PORT}" "${config_path}" quotes
 
         if [ -n "$MASTER_KEY" ]; then set_config master_key "${MASTER_KEY}" "${config_path}" quotes; fi
 
-        set_config no_analytics $no_analytics_value "$config_path"
+        set_config no_analytics $no_analytics_value "${config_path}"
         set_config http_payload_size_limit "${HTTP_PAYLOAD_SIZE_LIMIT}" "${config_path}" quotes
-        set_config log_level "${LOG_LEVEL}" "${config_path}" quotes
+        set_config log_level "${LOG_LEVEL^^}" "${config_path}" quotes
         set_config max_indexing_memory "${MAX_INDEXING_MEMORY}" "${config_path}" quotes
-        set_config max_indexing_threads ${MAX_INDEXING_THREADS} "$config_path"
-        set_config dump_dir "${DUMP_PATH}" "${config_path}" quotes
-        set_config ignore_missing_dump ${IGNORE_MISSING_DUMP} "$config_path"
-        set_config ignore_dump_if_db_exists ${IGNORE_DUMP_IF_DB_EXISTS} "$config_path"
-        set_config schedule_snapshot ${SCHEDULE_SNAPSHOT} "$config_path"
-        set_config snapshot_dir "${SNAPSHOT_DIR}" "${config_path}" quotes
-        set_config ignore_missing_snapshot ${IGNORE_MISSING_SNAPSHOT} "$config_path"
+        set_config max_indexing_threads ${MAX_INDEXING_THREADS} "${config_path}"
+        set_config dump_dir "${DUMP_PATH%/}" "${config_path}" quotes
+        set_config ignore_missing_dump ${IGNORE_MISSING_DUMP,,} "${config_path}"
+        set_config ignore_dump_if_db_exists ${IGNORE_DUMP_IF_DB_EXISTS,,} "${config_path}"
+        set_config schedule_snapshot ${SCHEDULE_SNAPSHOT,,} "${config_path}"
+        set_config snapshot_dir "${SNAPSHOT_PATH%/}" "${config_path}" quotes
+        set_config ignore_missing_snapshot ${IGNORE_MISSING_SNAPSHOT,,} "${config_path}"
         if [ -n "${SSL_AUTH_PATH}" ]; then set_config ssl_auth_path "$SSL_AUTH_PATH" "${config_path}" quotes ; fi
         if [ -n "${SSL_CERT_PATH}" ]; then set_config ssl_cert_path "$SSL_CERT_PATH" "${config_path}" quotes ; fi
         if [ -n "${SSL_KEY_PATH}" ] ; then set_config ssl_key_path "$SSL_KEY_PATH" "${config_path}" quotes ; fi
         if [ -n "${SSL_OCSP_PATH}" ]; then set_config ssl_ocsp_path "$SSL_OCSP_PATH" "${config_path}" quotes ; fi
-        set_config ssl_require_auth ${SSL_REQUIRE_AUTH} "$config_path"
-        set_config ssl_resumption ${SSL_RESUMPTION} "$config_path"
-        set_config ssl_tickets ${SSL_TICKETS} "$config_path"
+        set_config ssl_require_auth ${SSL_REQUIRE_AUTH} "${config_path}"
+        set_config ssl_resumption ${SSL_RESUMPTION} "${config_path}"
+        set_config ssl_tickets ${SSL_TICKETS} "${config_path}"
 
-        set_config experimental_enable_metrics ${ENABLE_METRICS} "$config_path"
-        set_config experimental_reduce_indexing_memory_usage ${REDUCE_INDEXING_MEMORY_USAGE} "$config_path"
+        set_config experimental_enable_metrics ${ENABLE_METRICS} "${config_path}"
+        set_config experimental_reduce_indexing_memory_usage ${REDUCE_INDEXING_MEMORY_USAGE} "${config_path}"
 
         if [ -n "${MAX_NUMBER_OF_BATCHED_TASKS}" ]; then
-            set_config experimental_max_number_of_batched_tasks ${MAX_NUMBER_OF_BATCHED_TASKS} "$config_path"
+            set_config experimental_max_number_of_batched_tasks ${MAX_NUMBER_OF_BATCHED_TASKS} "${config_path}"
         fi
     fi
 }
